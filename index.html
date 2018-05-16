@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Space Odyssey</title>
+  <link rel="stylesheet" href="static/css/bootstrap.css">
+  <link rel="stylesheet" href="static/css/style.css">
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="static/js/jquery.min.js"></script>
+  <script src="static/js/popper.min.js"></script>
+  <script src="static/js/bootstrap.min.js"></script>
+  <script src="static/js/chat.js"></script>
+  <script src="static/phaser.min.js"></script>
+  <script src = "static/game.js"></script>
+</head>
+<body>
+  <!-- INSTRUCTIONS MODAL -->
+  <div class="modal" id="instructionModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title">Space Odyssey</h5>
+            </div>
+            <div class="modal-body">
+                Welcome,<br>
+                This is a 2D multiplayer spaceshooter game.<br>
+                Anyone who enters will spawn in the game.
+                <br><br>
+                <strong>Controls:</strong><br>
+                <table class="w-100">
+                <tr><td class="w-60">Up Thrust</td><td class="w-40">NUMPAD 8</td></tr>
+                <tr><td>Left Rotation</td><td>NUMPAD 4</td></tr>
+                <tr><td>Right Rotation</td><td>NUMPAD 6</td></tr>
+                <tr><td>Shoot Bullets</td><td>NUMPAD 0</td></tr>
+              </table>
+                <br>
+                <strong>Chat:</strong>
+                <ul>
+                  <li>Select textfield and type your messages.</li>
+                  <li>Press Enter or click the Send button to send messages.</li>
+                </ul>
+            </div>
+            <div class="modal-footer">
+              <button class="btn btn-primary text-white" id="instructionButton">Ok</button>
+            </div>
+        </div>    
+    </div>
+  </div>
+
+  <!-- NAME MODAL -->
+
+  <div class="modal" id="nameModal">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Enter your name for chatroom (leave blank for anonymous)</h5>
+        </div>
+        <div class="modal-body">
+          <input type="text" class="form-control" placeholder="Enter Name" id="name">
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-primary text-white" id="nameButton">Enter</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MESSAGE BOX -->
+  <div class="container-fluid">
+    <div class="row fixed-top height-90 w-100">
+      <div id="gameDiv" class="col-9 bg-dark">
+      </div>
+      <div class="col-3 content" id="msgBox">
+        
+      </div>
+    </div>
+  </div>
+  <!-- SEND AREA -->
+  <div class="container-fluid height-10 fixed-bottom bg-dark text-light">
+    <div class="row mt-2">
+      <div class="col-7 col-sm-9 col-lg-10">
+      <input class="form-control w-100 d-inline" id="msg">
+    </div>
+      <div class="col-5 col-sm-3 col-lg-2">
+      <button class="btn btn-secondary text-light" id="rq">RQ</button>
+      <button class="btn btn-success" id="send">Send</button>
+      </div>
+    </div>
+  </div>
+
+</body>
+
+</html>
