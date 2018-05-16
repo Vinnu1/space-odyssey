@@ -50,7 +50,6 @@ function onNewplayer(data){
             y: existingPlayer.y,
             angle: existingPlayer.angle
         };
-        console.log("already present players coming");
         this.emit("new_enemyPlayer", player_info); // to sender-client only
 
     }
@@ -70,20 +69,15 @@ function onMovePlayer(data){
         y: movePlayer.y,
         angle: movePlayer.angle
     };
-    //console.log("Player:"+movePlayer.id+" x:"+movePlayer.x+" y:"+)
-    //console.log(movePlayerData);
-    //send to everyone except sender
     this.broadcast.emit('enemy_move',movePlayerData);
 }
 
 function onClientdisconnect(){
-    console.log('a user disconnect');
     var removePlayer = find_playerid(this.id);
     if(removePlayer){
         player_lst.splice(player_lst.indexOf(removePlayer),1);
 
     }
-    console.log("removing player" + this.id);
     this.broadcast.emit('remove_player',{id: this.id});
 }
 
@@ -98,7 +92,6 @@ function find_playerid(id){
 
 function shootBullet(data){
     var bulletPlayer = find_playerid(this.id);
-    //console.log('BulletPlayer:'+bulletPlayer);
     if(bulletPlayer == false){
         return;
     }
@@ -112,7 +105,6 @@ function playerDied(id){
     if(removePlayer){
         player_lst.splice(player_lst.indexOf(removePlayer),1);
     }
-    console.log("player died" + id);
     io.emit('died_player',id);
 }
 
@@ -175,8 +167,6 @@ function ServerGameLoop(){
 //connections
 
 io.on('connection', function(socket) {
-    console.log('A user connected');
-       socket.emit('vinayak','youre connected');
     socket.on('disconnect', onClientdisconnect);
     socket.on('new_player',onNewplayer);
     socket.on('move_player', onMovePlayer);

@@ -1,19 +1,7 @@
-//CURRENT PROBLEMS - buttons are clicked outside game environment
-
 var socket = io();
-socket.on('vinayak', function(data){console.log(data)});
 
 var enemies =[];
 var bullet_array = [];
-//on connection in socket
-
-/*function onsocketConnected(){
-    
-    ("connected to server");
-    createPlayer();
-    socket.emit('new_player',{x: game.width/2, y: game.height/2});
-}
-*/
 
 function onRemovePlayer(data){
     var removePlayer = findplayerbyid(data.id);
@@ -42,7 +30,6 @@ function createPlayer(){
     console.log("width:"+player.height+" height:"+player.width);
     game.physics.p2.enable(player);
     game.global.health = 100;
-    //player.body.immovable = true;
     game.camera.follow(player);
     console.log('original player made');
     socket.emit('new_player',{x: game.width/2, y: game.height/2, angle:0});
@@ -50,9 +37,7 @@ function createPlayer(){
     player.body.setCollisionGroup(playerCollisionGroup);
     player.body.collides(rockCollisionGroup);
     player.body.collides(playerCollisionGroup);
-    player.body.collides(healthCollisionGroup,hitHealth, this); //, hitRock, this);
-    //player.body.collides(layer,hitRock,this);
-    //player.body.collideWorldBounds = true;
+    player.body.collides(healthCollisionGroup,hitHealth, this);
 
 }
 
@@ -62,14 +47,7 @@ function hitHealth(rocket, healthBar) {
     }
     console.log("collided with health");
     game.global.health = 100;
-    //console.log(`healthbar : ${healthBar}`);
     healthBar.sprite.destroy();
-
-    //rocket.sprite.body.velocity.x = 0;            
-    //rocket.sprite.body.velocity.y = 0;
-    //rock.sprite.body.velocity.x = 0;            
-    //rock.sprite.body.velocity.y = 0;
-
 }
 
 var remote_player = function(id,startx,starty,startangle){
@@ -83,7 +61,6 @@ var remote_player = function(id,startx,starty,startangle){
     this.player.body.setCollisionGroup(playerCollisionGroup);
     this.player.body.collides(playerCollisionGroup);
     this.player.body.collides(rockCollisionGroup);
-    //this.player.body.immovable = true;
     this.player.body.collideWorldBounds = true;
 }
 
@@ -94,14 +71,10 @@ function onNewPlayer(data){
 }
 
 function onEnemyMove(data){
-    //console.log("Moving player:"+"id:"+data.id+"x:"+data.x+"y:"+data.y+"angle:"+data.angle);
-    //console.log(enemies);
     var movePlayer = findplayerbyid(data.id);
     if(!movePlayer){
         return;
     }
-    //movePlayer.player.x = data.x;  //body.x is readonly use x directly
-    //movePlayer.player.y = data.y;  //body.y is readonly use y directly
     movePlayer.player.body.x = data.x; 
 	movePlayer.player.body.y = data.y; 
 	movePlayer.player.body.angle = data.angle; 
@@ -133,8 +106,6 @@ for(var i=server_bullet_array.length;i<bullet_array.length;i++){
 }
 
 function playerHit(id){
-    console.log("bullet hit player:"+id);
-    //console.log("my id:"+player.id);
     if(player.id == id){
     game.global.health -=10;
     healthLabel.text='Health:'+game.global.health;
@@ -146,7 +117,6 @@ function playerHit(id){
 }
 
 function myid(id){
-    console.log("My id is:"+ id);
     player.id = id;
 }
 
@@ -157,7 +127,6 @@ function diedPlayer(id){
     else{
     var removePlayer = findplayerbyid(id);
     if(!removePlayer){
-        console.log('Player not found:',id);
         return;
     }
     removePlayer.player.destroy();
@@ -181,27 +150,15 @@ var playState = {
     create:function(){
         
         game.physics.startSystem(Phaser.Physics.P2JS);
-        game.physics.p2.setImpactEvents(true); //collision callback
-        //game.stage.backgroundColor = '#000000';
+        game.physics.p2.setImpactEvents(true);
         game.add.image(0,0,'background');
         game.add.image(1024,0,'background');
         game.add.image(0,1024,'background');
         game.add.image(1024,1024,'background');
         game.add.image(2048,0,'background');
         game.add.image(2048,1024,'background');
-        //health
-        /*{x:50,y:50},
-        {x:50,y:1600},
-        {x:2700,y:50},
-        {x:2700,y:1600},
-        {x:1350,y:800},
-        {x:800,y:1350} */
         healthCollisionGroup = game.physics.p2.createCollisionGroup();
         
-        //remotePlayerCollisionGroup = game.physics.p2.createCollisionGroup();
-        
-        
-        //background.scale.setTo(2758,1650);
         game.world.setBounds(0, 0, 2758, 1650);
         map = game.add.tilemap('map');
         map.addTilesetImage('tileset');
@@ -209,39 +166,12 @@ var playState = {
         layer.resizeWorld();
         map.setCollision(1);
         rocks = game.physics.p2.convertTilemap(map, layer);
-        //game.physics.p2.enable(layer);
-        //layer.body.kinematic = "true";
         game.scale.scaleMode = Phaser.ScaleManager.RESIZE;
         game.stage.disableVisibilityChange = true;
         
         game.renderer.renderSession.roundPixels = true;
 
-        //rocks 
-        /*
-        rock = game.add.sprite(300,300,'meteor');
-        game.physics.p2.enable(rock);
-        rock.body.kinematic = "true";
-        */
-        //rock.body.enable = true;
-        //rock.body.immovable = true;
-        //rock.body.moves = false;
         
-        
-        
-        
-
-        //bullet creation
-
-        //bullet = game.add.group;
-        
-        //weapon = game.add.weapon(40,'bullet');
-        //weapon.setBulletFrames(0,80,true);
-        //weapon.bulletKillType = Phaser.Weapon.KILL_WORLD_BOUNDS;
-        //weapon.bulletSpeed = 400;
-        //weapon.fireRate = 100;
-        //weapon.angle = 30; 
-        //weapon.bulletAngleOffset = 90;
-
         rockCollisionGroup = game.physics.p2.createCollisionGroup();
         //player creation
         console.log("client started");
@@ -266,12 +196,8 @@ var playState = {
             rockBody.collides(playerCollisionGroup);
         }
         game.physics.p2.setBoundsToWorld(true,true,true,true,false);
-        //rock.body.collides(playerCollisionGroup);
         game.physics.p2.updateBoundsCollisionGroup();
-        //bullet
-        //weapon.trackSprite(player, 0, 0);
-        //fireButton = game.input.keyboard.addKey(Phaser.KeyCode.SPACEBAR);
-
+       
 
         socket.on("new_enemyPlayer", onNewPlayer);
         socket.on("enemy_move", onEnemyMove);
@@ -283,9 +209,6 @@ var playState = {
         this.cursor = game.input.keyboard.createCursorKeys();
         healthLabel=game.add.text(30,30,'Health:'+game.global.health,{font:'25px Arial',fill:'#ffffff'});
         healthLabel.fixedToCamera = true;
-        //see about controls
-        //this.controlLabel=game.add.text(600,30,'Controls: Arrow Keys \nLaser: Space',{font:'18px Arial',fill:'#ffffff'});
-        //this.controlLabel.fixedToCamera = true;
         upKey = game.input.keyboard.addKey(Phaser.KeyCode.NUMPAD_8);
         leftKey = game.input.keyboard.addKey(Phaser.KeyCode.NUMPAD_4);
         rightKey = game.input.keyboard.addKey(Phaser.KeyCode.NUMPAD_6);
@@ -293,14 +216,6 @@ var playState = {
     },
 
     update:function(){
-        /*if(suicideButton.isDown){
-            console.log(`Died location x:${game.world.centerX}`);
-            player.destroy();
-            let dieText = this.game.add.text(game.camera.width/2,game.camera.height/2,"You died, reload for a new game.", {font: "30px Arial", fill: "#ffffff", stroke: '#000000', strokeThickness: 3});
-            dieText.anchor.setTo(0.5,0.5);
-            dieText.fixedToCamera = true;
-            return;
-        }*/
         this.movePlayer();
         if(fireButton.isDown && !this.shot){
             var speed_x = Math.cos(player.rotation - Math.PI/2) * 20;
@@ -312,9 +227,7 @@ var playState = {
             this.shot = false;
         }
         if(game.global.health == 0){
-            //this.game.add.text(game.world.centerX,game.world.centerY, "You died, reload for a new game.", {font: "30px Arial", fill: "#ffffff", stroke: '#000000', strokeThickness: 3});
-            //this.reloadLabel = game.add.text(280,340,'You died, Reload for a new game.',{font:'35px Arial',fill:'#ffffff'});
-        
+            
             let dieText = this.game.add.text(game.camera.width/2,game.camera.height/2,"You died, reload for a new game.", {font: "30px Arial", fill: "#ffffff", stroke: '#000000', strokeThickness: 3});
             dieText.anchor.setTo(0.5,0.5);
             dieText.fixedToCamera = true;
@@ -323,21 +236,12 @@ var playState = {
         
     healthLabel.text='Health:'+game.global.health;
         
-       /* if(fireButton.isDown){
-            weapon.fireAngle = player.angle - 90;
-            weapon.fire();
-        }*/
-        //for(i=0;i<enemies.length;i++){
-        //game.physics.arcade.collide(player,enemies[i].player);
-        //}
+       
     },
 
     movePlayer:function(){
         
-        //player.body.velocity.x = 0;
-        //player.body.velocity.y = 0;
-        //player.body.angularVelocity = 0;
-
+        
         if (leftKey.isDown) {player.body.rotateLeft(100);}   //ship movement
         else if (rightKey.isDown){player.body.rotateRight(100);}
         else {player.body.setZeroRotation();}
@@ -346,7 +250,7 @@ var playState = {
     }
 };
 
-var game = new Phaser.Game(1300,650,Phaser.AUTO,'gameDiv'); //w=2732, h=1536
+var game = new Phaser.Game(1300,650,Phaser.AUTO,'gameDiv');
 game.global={
 	health:100
 };
