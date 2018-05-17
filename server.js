@@ -43,7 +43,7 @@ function onNewplayer(data){
 
     //send to new player about everyone already present.
     for (i=0;i<player_lst.length;i++){
-        existingPlayer = player_lst[i]; // local variable
+        existingPlayer = player_lst[i]; 
         var player_info = {
             id: existingPlayer.id,
             x: existingPlayer.x,
