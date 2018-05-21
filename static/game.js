@@ -6,7 +6,6 @@ var bullet_array = [];
 function onRemovePlayer(data){
     var removePlayer = findplayerbyid(data.id);
     if(!removePlayer){
-        console.log('Player not found:',data.id);
         return;
     }
     removePlayer.player.destroy();
@@ -23,15 +22,11 @@ function createPlayer(){
         {x:800,y:1350}
     ];
     let num = Math.floor(Math.random()*6);
-    console.log(`x coord:${spawn_locations[num].x}, y coord:${spawn_locations[num].y}`);
     player = game.add.sprite(spawn_locations[num].x,spawn_locations[num].y,'player');
     player.anchor.setTo(0.5,0.5);
-    console.log("x:"+player.x+"y:"+player.y);
-    console.log("width:"+player.height+" height:"+player.width);
     game.physics.p2.enable(player);
     game.global.health = 100;
     game.camera.follow(player);
-    console.log('original player made');
     socket.emit('new_player',{x: game.width/2, y: game.height/2, angle:0});
     playerCollisionGroup = game.physics.p2.createCollisionGroup();
     player.body.setCollisionGroup(playerCollisionGroup);
@@ -45,7 +40,6 @@ function hitHealth(rocket, healthBar) {
     if(healthBar.sprite === null){
         return;
     }
-    console.log("collided with health");
     game.global.health = 100;
     healthBar.sprite.destroy();
 }
@@ -191,7 +185,6 @@ var playState = {
         
         for(var i = 0; i < rocks.length; i++ ){
             rockBody = rocks[i];
-            console.log("rockBody:",rockBody.x,rockBody.y);
             rockBody.setCollisionGroup(rockCollisionGroup);
             rockBody.collides(playerCollisionGroup);
         }
@@ -241,9 +234,8 @@ var playState = {
     },
 
     movePlayer:function(){
-        
-        
-        if (leftKey.isDown) {player.body.rotateLeft(100);}   //ship movement
+        //ship movement
+        if (leftKey.isDown) {player.body.rotateLeft(100);}   
         else if (rightKey.isDown){player.body.rotateRight(100);}
         else {player.body.setZeroRotation();}
         if (upKey.isDown){player.body.thrust(100);}

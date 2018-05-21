@@ -26,7 +26,6 @@ var Player = function(startX,startY,startAngle){
 }
 
 function onNewplayer(data){
-    console.log(data);
     var newPlayer = new Player(data.x, data.y, data.angle);
     console.log(newPlayer);
     console.log("created new player with id"+this.id);
@@ -140,11 +139,10 @@ function ServerGameLoop(){
           var dx = (player_lst[j].x) - bullet.x; 
           var dy = (player_lst[j].y) - bullet.y;
           var dist = Math.sqrt(dx * dx + dy * dy);
-          console.log("Dist:"+dist +" Player x:"+player_lst[j].x+" Player y:"+player_lst[j].y);
+          
           if((dist < 20)){
-            console.log("Dist Hit:"+dist+ "Player x:"+player_lst[j].x+ "Player y:"+player_lst[j].y+" Bullet x:"+bullet.x+" Bullet y:"+bullet.y);
+            //player hit
             bullet_array.splice(i,1);
-            console.log("sending player hit");
             io.emit('player-hit',player_lst[j].id); // Tell everyone this player got hit
           }
         }
