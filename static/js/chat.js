@@ -32,6 +32,7 @@ document.addEventListener("DOMContentLoaded",function(){
             Name = name.value;
         }
         $("#nameModal").modal("hide");
+        game.state.start('play');
     });
     
     function sendMessage(){

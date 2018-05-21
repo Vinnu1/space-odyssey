@@ -226,11 +226,12 @@ var playState = {
         if(!fireButton.isDown){
             this.shot = false;
         }
-        if(game.global.health == 0){
+        if(game.global.health == 0 && !this.death){
             
             let dieText = this.game.add.text(game.camera.width/2,game.camera.height/2,"You died, reload for a new game.", {font: "30px Arial", fill: "#ffffff", stroke: '#000000', strokeThickness: 3});
             dieText.anchor.setTo(0.5,0.5);
             dieText.fixedToCamera = true;
+            this.death = true;
         }
 
         
@@ -255,4 +256,3 @@ game.global={
 	health:100
 };
 game.state.add('play', playState);
-game.state.start('play');
