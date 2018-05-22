@@ -161,8 +161,40 @@ function ServerGameLoop(){
   
   setInterval(ServerGameLoop, 16); 
 
+//health
+
+var h_positions = [{x:120,y:120},{x:150,y:1500},{x:2600,y:130},{x:2500,y:1600},{x:1250,y:800}];
+var currentHealth = {x:0,y:0};
+function locateHealth(){
+ if(currentHealth.x == 0 && currentHealth.y == 0){
+    //if no health, send health coords to create healthBar 
+    var h_num = Math.floor(Math.random()*5);
+    currentHealth = {x:h_positions[h_num].x,y:h_positions[h_num].y};
+    this.emit("healthPosition",{x:currentHealth.x,y:currentHealth.y});
+ }
+ else{
+    //if health already present; show where; 
+    this.emit("healthPosition",{x:currentHealth.x,y:currentHealth.y});
+ }    
+}
+
+function changeHealth(){
+    //change health position as it was present and destroyed.
+    
+    //remove present health location
+    var positions = h_positions.slice();
+    var index = positions.findIndex(element => element.x == currentHealth.x && element.y == currentHealth.y);
+    positions.splice(positions.indexOf(index),1);
+    
+    //send health coords
+    var h_num = Math.floor(Math.random()*4);
+    currentHealth = {x:positions[h_num].x,y:positions[h_num].y};
+    io.emit("healthPosition",{x:currentHealth.x,y:currentHealth.y});
+}
+
 
 //connections
+
 
 io.on('connection', function(socket) {
     socket.on('disconnect', onClientdisconnect);
@@ -172,6 +204,8 @@ io.on('connection', function(socket) {
     socket.on('player_died',playerDied);
     //on message recieve
     socket.on("message",sendMessage);
+    socket.on("findHealth",locateHealth);
+    socket.on("updateHealth",changeHealth);
  });
 
  //chat services

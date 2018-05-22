@@ -36,14 +36,6 @@ function createPlayer(){
 
 }
 
-function hitHealth(rocket, healthBar) {
-    if(healthBar.sprite === null){
-        return;
-    }
-    game.global.health = 100;
-    healthBar.sprite.destroy();
-}
-
 var remote_player = function(id,startx,starty,startangle){
     this.x=startx;
     this.y=starty;
@@ -128,6 +120,24 @@ function diedPlayer(id){
 }
 }
 
+function createHealthBar(coords){
+        if(this.healthBar){
+            this.health.destroy();
+            this.healthBar = false;
+        }
+        this.healthBar = true;     
+        this.health = game.add.sprite(coords.x,coords.y,'health');
+        game.physics.p2.enable(this.health);
+        this.health.body.kinematic = "true";
+        this.health.body.setCollisionGroup(healthCollisionGroup);
+        this.health.body.collides(playerCollisionGroup);
+}
+
+function hitHealth(rocket, healthBar) {
+    game.global.health = 100;
+    socket.emit("updateHealth");
+}
+
 //game object
 
 var playState = {
@@ -171,16 +181,6 @@ var playState = {
         console.log("client started");
         createPlayer();
 
-        h_positions = [{x:120,y:120},{x:150,y:1500},{x:2600,y:130},{x:2500,y:1600},{x:1250,y:800}];
-        setInterval(function(){
-            let h_num = Math.floor(Math.random()*5);
-            health = game.add.sprite(h_positions[h_num].x,h_positions[h_num].y,'health');
-            console.log("Created health at:",h_positions[h_num].x,h_positions[h_num].y);
-            game.physics.p2.enable(health);
-            health.body.kinematic = "true";
-            health.body.setCollisionGroup(healthCollisionGroup);
-            health.body.collides(playerCollisionGroup);    
-        },60000)
 
         
         for(var i = 0; i < rocks.length; i++ ){
@@ -199,6 +199,8 @@ var playState = {
         socket.on("player-hit",playerHit);
         socket.on("my_id",myid);
         socket.on("died_player",diedPlayer);
+        socket.on("healthPosition",createHealthBar);
+        socket.emit("findHealth");
         this.cursor = game.input.keyboard.createCursorKeys();
         healthLabel=game.add.text(30,30,'Health:'+game.global.health,{font:'25px Arial',fill:'#ffffff'});
         healthLabel.fixedToCamera = true;
